@@ -1,4 +1,4 @@
-# termyte
+# Termyte
 Handheld computer terminal
 
 ## Dependencies
