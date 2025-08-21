@@ -8,6 +8,7 @@ black background and box drawing borders.
 
 from dataclasses import dataclass
 from typing import Dict
+import time
 
 from textual import events
 from textual.app import App, ComposeResult
@@ -37,20 +38,15 @@ class TermyteApp(App):
     # 8×16 pixel terminal font, which yields an 80×24 character grid.
     TARGET_SIZE: tuple[int, int] = (80, 24)
 
-    # Retro BBS inspired global styling.
-    CSS = """
-    Screen {
-        background: black;
-        color: #00ff00;               /* bright green foreground */
-        font-family: monospace;       /* terminal friendly font */
-        width: 80;                    /* fit 5" 800×480 display */
-        height: 24;
-    }
+    # Load styling from an external CSS file for easier tweaking.
+    CSS_PATH = "app.css"
 
-    * {
-        border: heavy #ffbf00;        /* amber ANSI box-drawing borders */
-    }
-    """
+    # Key bindings for runtime actions.
+    BINDINGS = [
+        ("ctrl+t", "toggle_theme", "Toggle CRT theme"),
+    ]
+
+    theme: str = "green"
 
     # Placeholder configuration for upcoming widgets.  All are disabled by
     # default and will only be created when enabled.
@@ -75,9 +71,9 @@ class TermyteApp(App):
 
     async def on_mount(self) -> None:
         """Start background listeners once the application is mounted."""
-
         self._chatpad = ChatpadListener(self)
         await self._chatpad.start()
+        self._apply_theme()
 
     async def on_shutdown(self) -> None:
         """Stop background listeners when the application exits."""
@@ -91,9 +87,31 @@ class TermyteApp(App):
         if event.key == "ctrl+c":
             await self.action_quit()
 
+    def _apply_theme(self) -> None:
+        """Apply the current CRT color theme."""
+        self.screen.set_class(self.theme == "green", "theme-green")
+        self.screen.set_class(self.theme == "amber", "theme-amber")
+
+    def action_toggle_theme(self) -> None:
+        """Switch between amber and green CRT themes."""
+        self.theme = "amber" if self.theme == "green" else "green"
+        self._apply_theme()
+
 
 def run() -> None:
-    """Run the Termyte Textual application."""
+    """Run the Termyte Textual application with a retro banner."""
+    banner = r"""
+ _______                  __          __        
+|_   __ \                [  |        [  |       
+  | |__) |   .--.   .--./\_| |  .--.   | |--.   
+  |  ___/  / .'`\ \/ /'`\ ]| |/ .'`\ \ | .-. |  
+ _| |_    | \__. |\ \._// | || \__. | | | | |  
+|_____|    '.__.'  '.__.'[___]'.__.' [___]|__] 
+    """
+    for line in banner.splitlines():
+        print(line)
+        time.sleep(0.05)
+    time.sleep(0.5)
     TermyteApp().run()
 
 
