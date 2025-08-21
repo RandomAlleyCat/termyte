@@ -13,6 +13,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Placeholder
 from widgets.system_stats import SystemStats
 from widgets.web_feeds import WebFeeds
+from widgets.shell import ShellWidget
 
 
 @dataclass
@@ -65,6 +66,8 @@ class TermyteApp(App):
                     yield SystemStats()
                 elif name == "web_feeds":
                     yield WebFeeds()
+                elif name == "shell":
+                    yield ShellWidget()
                 else:
                     yield Placeholder(id=name)
 
