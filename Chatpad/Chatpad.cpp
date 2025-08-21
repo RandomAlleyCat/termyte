@@ -205,16 +205,16 @@ void Chatpad::dispatch(uint8_t keycode, int is_down) {
 
 //-----------------------------------------------------------------
 // Function: toAscii
-// Purpose: Convert a Chatpad keycode into an ASCII character using lookup tables.
+// Purpose: Convert a Chatpad keycode into an ASCII byte using lookup tables.
 //          The table used depends on the current modifier state (Shift, Green, Orange, or People mode).
 // Parameters:
 //    - keycode: The raw keycode from the Chatpad
 // Returns:
-//    - The corresponding ASCII character, or 0 if no mapping exists.
+//    - The corresponding ASCII byte or function-key code, or 0 if no mapping exists.
 //-----------------------------------------------------------------
-char Chatpad::toAscii(keycode_t keycode) {
+uint8_t Chatpad::toAscii(keycode_t keycode) {
     // Lookup tables stored in program memory (PROGMEM) for different modifier states.
-    static const char kAsciiTable[] PROGMEM = {
+    static const uint8_t kAsciiTable[] PROGMEM = {
         '7', '6', '5', '4', '3', '2', '1', 0,
         'u', 'y', 't', 'r', 'e', 'w', 'q', 0,
         'j', 'h', 'g', 'f', 'd', 's', 'a', 0,
@@ -224,7 +224,7 @@ char Chatpad::toAscii(keycode_t keycode) {
         '\b', 'l', 0, 0, 'o', 'i', 'k', 0,
     };
 
-    static const char kAsciiTable_Shifted[] PROGMEM = {
+    static const uint8_t kAsciiTable_Shifted[] PROGMEM = {
         '&', '^', '%', '$', '#', '@', '!', 0,
         'U', 'Y', 'T', 'R', 'E', 'W', 'Q', 0,
         'J', 'H', 'G', 'F', 'D', 'S', 'A', 0,
@@ -234,7 +234,7 @@ char Chatpad::toAscii(keycode_t keycode) {
         '\b', 'L', 0, 0, 'O', 'I', 'K', 0,
     };
 
-    static const char kAsciiTable_Green[] PROGMEM = {
+    static const uint8_t kAsciiTable_Green[] PROGMEM = {
         '&', '^', '%', '$', '#', '@', '!', 0,
         '&', '^', '%', '#', 128, '@', '!', 0,
         39, 47, 168, 125, 123, 138, '~', 0,
@@ -244,7 +244,7 @@ char Chatpad::toAscii(keycode_t keycode) {
         '\b', 93, 0, 0, '(', '*', 91, 0,
     };
 
-    static const char kAsciiTable_Orange[] PROGMEM = {
+    static const uint8_t kAsciiTable_Orange[] PROGMEM = {
        KEY_F7, KEY_F6, KEY_F5, KEY_F4, KEY_F3, KEY_F2, KEY_F1, 0,
        'U', 'Y', 'T', 'R', 'E', 'W', 'Q', 0,
        34, 92, 'G', 'F', 'D', 'S', 'A', 0,
@@ -254,7 +254,7 @@ char Chatpad::toAscii(keycode_t keycode) {
        212, 'L', 0, 0, 'O', 'I', 'K', 0,
     };
 
-    static const char kAsciiTable_PeopleMode[] PROGMEM = {
+    static const uint8_t kAsciiTable_PeopleMode[] PROGMEM = {
         KEY_F7, KEY_F6, KEY_F5, KEY_F4, KEY_F3, KEY_F2, KEY_F1, 0,
         'u', 'y', 't', 'r', 'e', 218, 'q', 0,
         'j', 'h', 'g', 'f', 215, 217, 216, 0,
@@ -268,8 +268,8 @@ char Chatpad::toAscii(keycode_t keycode) {
     // The calculation maps the keycode into an index that selects the correct character.
     uint8_t index = (((keycode - 0x11) & 0x70) >> 1) | ((keycode - 0x11) & 0x7);
     // Ensure the index is within bounds; if not, return 0 (no mapping).
-if (index >= (sizeof(kAsciiTable) / sizeof(kAsciiTable[0])))
-    return 0;
+    if (index >= (sizeof(kAsciiTable) / sizeof(kAsciiTable[0])))
+        return 0;
 
     // Select the appropriate lookup table based on the current modifier state:
     if (isPeopleModeToggled()) {
