@@ -89,5 +89,13 @@ else:
                 os.write(self._fd, b"\x7f")
             elif key == "ctrl+c":
                 os.write(self._fd, b"\x03")
+            elif key == "up":
+                os.write(self._fd, b"\x1b[A")
+            elif key == "down":
+                os.write(self._fd, b"\x1b[B")
+            elif key == "right":
+                os.write(self._fd, b"\x1b[C")
+            elif key == "left":
+                os.write(self._fd, b"\x1b[D")
             elif len(key) == 1:
                 os.write(self._fd, key.encode())

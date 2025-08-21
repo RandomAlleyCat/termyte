@@ -9,11 +9,13 @@ black background and box drawing borders.
 from dataclasses import dataclass
 from typing import Dict
 
+from textual import events
 from textual.app import App, ComposeResult
 from textual.widgets import Placeholder
 from widgets.system_stats import SystemStats
 from widgets.web_feeds import WebFeeds
 from widgets.shell import ShellWidget
+from chatpad import ChatpadListener
 
 
 @dataclass
@@ -70,6 +72,24 @@ class TermyteApp(App):
                     yield ShellWidget()
                 else:
                     yield Placeholder(id=name)
+
+    async def on_mount(self) -> None:
+        """Start background listeners once the application is mounted."""
+
+        self._chatpad = ChatpadListener(self)
+        await self._chatpad.start()
+
+    async def on_shutdown(self) -> None:
+        """Stop background listeners when the application exits."""
+
+        if hasattr(self, "_chatpad"):
+            await self._chatpad.stop()
+
+    async def on_key(self, event: events.Key) -> None:
+        """Handle global key bindings."""
+
+        if event.key == "ctrl+c":
+            await self.action_quit()
 
 
 def run() -> None:

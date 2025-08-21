@@ -10,6 +10,8 @@ Handheld computer terminal
 - [feedparser](https://pypi.org/project/feedparser/) – Parses feed data.
 - [PyYAML](https://pypi.org/project/PyYAML/) – Reads feed URLs from the
   `feeds.yml` configuration file.
+- [evdev](https://pypi.org/project/evdev/) – Captures scancodes from the Chatpad
+  keyboard.
 
 ## Web feed configuration
 
@@ -25,6 +27,14 @@ feeds:
 Each feed's headlines are rendered in a scrollable list.  With a headline
 highlighted, press `o` to open the article using the command specified in the
 `$BROWSER` environment variable (falling back to `xdg-open`).
+
+## Chatpad input
+
+Termyte can use an attached Xbox Chatpad as a tiny hardware keyboard.  When the
+device is plugged in it is detected automatically under `/dev/input` and its
+scancodes are translated to Textual key names.  The default mappings live in
+`chatpad_keymap.yml` in the project root and may be edited to remap individual
+keys.  Any changes take effect the next time the application starts.
 
 ## Security notes
 
