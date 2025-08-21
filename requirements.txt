@@ -2,4 +2,6 @@ psutil
 httpx
 feedparser
 PyYAML
-evdev
+rich
+textual
+evdev; platform_system == "Linux"
