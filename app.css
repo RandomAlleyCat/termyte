@@ -1,0 +1,29 @@
+:root {
+    --crt-amber: #ffbf00;
+    --crt-green: #00ff00;
+    --crt-bg: black;
+    --crt-fg: var(--crt-green);
+    --crt-border: var(--crt-green);
+}
+
+.theme-amber {
+    --crt-fg: var(--crt-amber);
+    --crt-border: var(--crt-amber);
+}
+
+.theme-green {
+    --crt-fg: var(--crt-green);
+    --crt-border: var(--crt-green);
+}
+
+Screen {
+    background: var(--crt-bg);
+    color: var(--crt-fg);
+    font-family: monospace;
+    width: 80;
+    height: 24;
+}
+
+* {
+    border: heavy var(--crt-border);
+}
