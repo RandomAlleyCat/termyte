@@ -58,11 +58,12 @@ void handleKey(Chatpad &pad, Chatpad::keycode_t key, Chatpad::eventtype_t event)
       Keyboard.press(asciiKey);
       Serial.print("Key pressed: ");
       Serial.println(asciiKey);
-      
+
       // Set LED color based on key type
-      if (isalpha(asciiKey))
+      unsigned char ch = static_cast<unsigned char>(asciiKey);
+      if (isalpha(ch))
         neoPixel.setPixelColor(0, COLOR_BLUE);    // Blue for letters
-      else if (isdigit(asciiKey))
+      else if (isdigit(ch))
         neoPixel.setPixelColor(0, COLOR_GREEN);     // Green for digits
       else
         neoPixel.setPixelColor(0, COLOR_YELLOW);    // Yellow for other ASCII characters
