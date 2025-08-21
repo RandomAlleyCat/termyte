@@ -23,8 +23,11 @@ Adafruit_NeoPixel neoPixel(NUM_PIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 // Create an instance of the Chatpad
 Chatpad chatpad;
 
-// Global variable for heartbeat timing
+// Global variables for heartbeat and debug LED timing
 unsigned long lastHeartbeat = 0;
+unsigned long heartbeatStart = 0;
+bool heartbeatOn = false;
+unsigned long debugLEDExpire = 0;
 
 //-----------------------------------------------------------------
 // Function: debugLED
@@ -36,9 +39,7 @@ unsigned long lastHeartbeat = 0;
 void debugLED(uint32_t color, uint16_t duration = 100) {
   neoPixel.setPixelColor(0, color);
   neoPixel.show();
-  delay(duration);
-  neoPixel.setPixelColor(0, COLOR_OFF);
-  neoPixel.show();
+  debugLEDExpire = millis() + duration;
 }
 
 //-----------------------------------------------------------------
@@ -122,14 +123,29 @@ void setup() {
 //-----------------------------------------------------------------
 void loop() {
   chatpad.poll();  // Poll Chatpad for key events
-  
-  // Heartbeat LED Debugging: Blink a dim white LED every 1000 ms
-  if (millis() - lastHeartbeat >= 1000) {
-    neoPixel.setPixelColor(0, COLOR_HEARTBEAT);
-    neoPixel.show();
-    delay(50);  // Brief blink duration
+
+  unsigned long now = millis();
+
+  // Turn off debug LED after the requested duration
+  if (debugLEDExpire && now >= debugLEDExpire) {
     neoPixel.setPixelColor(0, COLOR_OFF);
     neoPixel.show();
-    lastHeartbeat = millis();
+    debugLEDExpire = 0;
+  }
+
+  // Heartbeat LED Debugging: Blink a dim white LED every 1000 ms
+  if (!heartbeatOn && now - lastHeartbeat >= 1000) {
+    neoPixel.setPixelColor(0, COLOR_HEARTBEAT);
+    neoPixel.show();
+    heartbeatOn = true;
+    heartbeatStart = now;
+    lastHeartbeat = now;
+  }
+
+  // Turn off the heartbeat after 50 ms
+  if (heartbeatOn && now - heartbeatStart >= 50) {
+    neoPixel.setPixelColor(0, COLOR_OFF);
+    neoPixel.show();
+    heartbeatOn = false;
   }
 }

@@ -45,13 +45,11 @@ void Chatpad::poll() {
         if (byte == 0xA5 || byte == 0xB4) {
             _buffer[0] = byte;  // Store the first byte in the buffer
 
-            // Read the next 7 bytes to complete an 8-byte packet
-            for (int i = 1; i < 8; i++) {
-                // Wait (busy-wait) until a byte is available
-                while (!_serial->available()) {
-                    ;  // Do nothing until data is available
-                }
-                _buffer[i] = _serial->read();  // Store the byte in the buffer
+            // Attempt to read the remaining 7 bytes with a short timeout instead of busy-waiting.
+            _serial->setTimeout(10);  // Timeout in milliseconds
+            size_t received = _serial->readBytes(reinterpret_cast<char*>(&_buffer[1]), 7);
+            if (received != 7) {
+                return;  // Incomplete packet
             }
         } else {
             return;  // If the first byte is not valid, exit the poll function
