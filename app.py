@@ -11,6 +11,7 @@ from typing import Dict
 
 from textual.app import App, ComposeResult
 from textual.widgets import Placeholder
+from widgets.system_stats import SystemStats
 
 
 @dataclass
@@ -59,7 +60,10 @@ class TermyteApp(App):
         """Compose layout, adding widgets only when enabled."""
         for name, cfg in self.widget_config.items():
             if cfg.enabled:
-                yield Placeholder(id=name)
+                if name == "system_stats":
+                    yield SystemStats()
+                else:
+                    yield Placeholder(id=name)
 
 
 def run() -> None:
