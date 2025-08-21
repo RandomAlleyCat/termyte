@@ -23,10 +23,8 @@ Adafruit_NeoPixel neoPixel(NUM_PIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 // Create an instance of the Chatpad
 Chatpad chatpad;
 
-// Global variables for heartbeat and debug LED timing
+// Global variables for heartbeat timing and debug LED expiration
 unsigned long lastHeartbeat = 0;
-unsigned long heartbeatStart = 0;
-bool heartbeatOn = false;
 unsigned long debugLEDExpire = 0;
 
 //-----------------------------------------------------------------
@@ -68,14 +66,15 @@ void handleKey(Chatpad &pad, Chatpad::keycode_t key, Chatpad::eventtype_t event)
         neoPixel.setPixelColor(0, COLOR_GREEN);     // Green for digits
       else
         neoPixel.setPixelColor(0, COLOR_YELLOW);    // Yellow for other ASCII characters
+
+      neoPixel.show();
     } else {
       // For non-ASCII keys, log the code and flash red for debugging
       Serial.print("Non-ASCII key pressed, code: ");
       Serial.println(key, HEX);
-      neoPixel.setPixelColor(0, COLOR_RED);
+      debugLED(COLOR_RED);
     }
-    neoPixel.show();
-  } 
+  }
   else if (event == Chatpad::Up) {  // On key release
     if (asciiKey)
       Keyboard.release(asciiKey);
@@ -134,18 +133,8 @@ void loop() {
   }
 
   // Heartbeat LED Debugging: Blink a dim white LED every 1000 ms
-  if (!heartbeatOn && now - lastHeartbeat >= 1000) {
-    neoPixel.setPixelColor(0, COLOR_HEARTBEAT);
-    neoPixel.show();
-    heartbeatOn = true;
-    heartbeatStart = now;
+  if (now - lastHeartbeat >= 1000) {
+    debugLED(COLOR_HEARTBEAT, 50);
     lastHeartbeat = now;
-  }
-
-  // Turn off the heartbeat after 50 ms
-  if (heartbeatOn && now - heartbeatStart >= 50) {
-    neoPixel.setPixelColor(0, COLOR_OFF);
-    neoPixel.show();
-    heartbeatOn = false;
   }
 }
