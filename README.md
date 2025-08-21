@@ -25,3 +25,10 @@ feeds:
 Each feed's headlines are rendered in a scrollable list.  With a headline
 highlighted, press `o` to open the article using the command specified in the
 `$BROWSER` environment variable (falling back to `xdg-open`).
+
+## Security notes
+
+The `ShellWidget` spawns an interactive shell inside the application. Anything
+typed into this widget runs with the same permissions as the user launching
+Termyte, so the program should only be used in trusted environments.
+
