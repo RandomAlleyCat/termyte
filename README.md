@@ -1,6 +1,23 @@
 # Termyte
 Handheld computer terminal
 
+## Installation
+
+Create a virtual environment and install the project's Python dependencies with
+the provided script:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/<username>/termyte/main/scripts/install.sh | bash
+# or
+./scripts/install.sh
+```
+
+On Windows PowerShell:
+
+```powershell
+./scripts/install.ps1
+```
+
 ## Dependencies
 
 - [psutil](https://pypi.org/project/psutil/) – Used by the `SystemStats` widget to

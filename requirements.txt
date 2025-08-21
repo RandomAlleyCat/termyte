@@ -1,0 +1,5 @@
+psutil
+httpx
+feedparser
+PyYAML
+evdev
