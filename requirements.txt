@@ -3,5 +3,5 @@ httpx
 feedparser
 PyYAML
 rich
-textual
+textual>=0.47
 evdev; platform_system == "Linux"
