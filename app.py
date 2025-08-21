@@ -12,6 +12,7 @@ from typing import Dict
 from textual.app import App, ComposeResult
 from textual.widgets import Placeholder
 from widgets.system_stats import SystemStats
+from widgets.web_feeds import WebFeeds
 
 
 @dataclass
@@ -62,6 +63,8 @@ class TermyteApp(App):
             if cfg.enabled:
                 if name == "system_stats":
                     yield SystemStats()
+                elif name == "web_feeds":
+                    yield WebFeeds()
                 else:
                     yield Placeholder(id=name)
 
