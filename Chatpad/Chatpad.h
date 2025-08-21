@@ -72,14 +72,14 @@ public:
 
     //-----------------------------------------------------------------
     // Function: toAscii
-    // Purpose: Convert a raw keycode to its corresponding ASCII character
+    // Purpose: Convert a raw keycode to its corresponding ASCII byte
     //          based on the current modifier state.
     // Parameters:
     //    - keycode: A raw keycode value from the Chatpad.
     // Returns:
-    //    - The ASCII character for that keycode, or 0 if unmapped.
+    //    - The ASCII byte or function-key code for that keycode, or 0 if unmapped.
     //-----------------------------------------------------------------
-    char toAscii(keycode_t keycode);
+    uint8_t toAscii(keycode_t keycode);
 
 private:
     //-----------------------------------------------------------------

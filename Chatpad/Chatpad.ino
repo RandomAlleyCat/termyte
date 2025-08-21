@@ -51,17 +51,17 @@ void debugLED(uint32_t color, uint16_t duration = 100) {
 //   - event: Event type (Down for key press, Up for key release)
 //-----------------------------------------------------------------
 void handleKey(Chatpad &pad, Chatpad::keycode_t key, Chatpad::eventtype_t event) {
-  char asciiKey = pad.toAscii(key);  // Convert keycode to ASCII (if possible)
+  uint8_t asciiKey = pad.toAscii(key);  // Convert keycode to ASCII (if possible)
   
   if (event == Chatpad::Down) {  // On key press
     if (asciiKey) {
       // Send key press to the computer
       Keyboard.press(asciiKey);
       Serial.print("Key pressed: ");
-      Serial.println(asciiKey);
+      Serial.println(static_cast<char>(asciiKey));
 
       // Set LED color based on key type
-      unsigned char ch = static_cast<unsigned char>(asciiKey);
+      uint8_t ch = asciiKey;
       if (isalpha(ch))
         neoPixel.setPixelColor(0, COLOR_BLUE);    // Blue for letters
       else if (isdigit(ch))
