@@ -36,6 +36,16 @@ scancodes are translated to Textual key names.  The default mappings live in
 `chatpad_keymap.yml` in the project root and may be edited to remap individual
 keys.  Any changes take effect the next time the application starts.
 
+## Roadmap
+
+- **Weather widget** – display current conditions and forecasts.
+- **Message board** – lightweight BBS for local chatter.
+- **Media controls** – play/pause and volume control for system audio.
+- **Plugin API** – allow third parties to develop and share their own widgets.
+
+Contributions are welcome!  Please open an issue or submit a pull request with
+ideas and improvements.
+
 ## Security notes
 
 The `ShellWidget` spawns an interactive shell inside the application. Anything
